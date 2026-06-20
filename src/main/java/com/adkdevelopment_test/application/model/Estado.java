@@ -10,7 +10,8 @@ public enum Estado {
     PB("Paraíba"),PE("Pernambuco"), PI("Piauí"),
     PR("Paraná"),RJ("Rio de Janeiro"),TO("Tocantins"),
     RN("Rio Grande do Norte"),RO("Rondônia"),SE("Sergipe"),
-    SC("Santa Catarina"),SP("São Paulo"),;
+    SC("Santa Catarina"),SP("São Paulo"),RR("Roraima"),
+    RS("Rio Grande do Sul");
 
 
 
