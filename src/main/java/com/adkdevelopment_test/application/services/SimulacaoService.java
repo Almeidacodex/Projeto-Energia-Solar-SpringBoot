@@ -18,7 +18,10 @@ public class SimulacaoService {
        if (consumo == null || consumo.compareTo(BigDecimal.ZERO) <=0){
            throw new IllegalArgumentException("Consumo deve ser maior que zero");
        }
-       if (tarifa  == null || tarifa.compareTo(BigDecimal.ZERO)<=0 ){
+       if (tarifa  == null
+               || tarifa.compareTo(BigDecimal.ZERO)<=0
+               || tarifa.compareTo(new BigDecimal("5.0"))>0)
+       {
            throw new IllegalArgumentException("Tarifa inválida. Use um valor  entre 0 e R$ 5,00/kWh.");
        }
        if (irradiacao == null || irradiacao.compareTo(BigDecimal.ZERO) <=0){
