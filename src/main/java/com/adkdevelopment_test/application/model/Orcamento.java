@@ -201,4 +201,26 @@ public class Orcamento {
                 .multiply(BigDecimal.valueOf(100))
                 .setScale(1, RoundingMode.HALF_UP);
     }
+
+    @Transient
+    public boolean isCompensa() {
+        if (paybackAnos == null) {
+            return false;
+        }
+        return paybackAnos.compareTo(new BigDecimal("8")) <=0;
+    }
+
+    @Transient
+    public Classificacao getClassificacao(){
+        if (paybackAnos == null){
+            return Classificacao.NAO_COMPENSA;
+        }
+        if (paybackAnos.compareTo(new BigDecimal("5")) <=0){
+            return Classificacao.OTIMO;
+        }
+        if (paybackAnos.compareTo(new BigDecimal("8")) <= 0){
+            return Classificacao.RAZOAVEL;
+        }
+        return Classificacao.NAO_COMPENSA;
+    }
 }
