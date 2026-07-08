@@ -1,7 +1,7 @@
 package com.adkdevelopment_test.application.services;
 
-
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,19 +13,18 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    // em produção, mova essa chave para application.propperties ou variável de ambiente
     private static final String SECRET = "energia-solar-chave-secreta-minimo-256-bit-segura";
-    private static final long EXPIRACAO_MS = 1000 * 60 * 60 * 24;// 24 horas
+    private static final long EXPIRACAO_MS = 1000 * 60 * 60 * 24;
 
-    private SecretKey getChave(){
+    private SecretKey getChave() {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
-    public  String gerarToken(UserDetails userDetails){
+    public String gerarToken(UserDetails userDetails) {
         return Jwts.builder()
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis()+ EXPIRACAO_MS))
+                .expiration(new Date(System.currentTimeMillis() + EXPIRACAO_MS))
                 .signWith(getChave())
                 .compact();
     }
@@ -35,8 +34,13 @@ public class JwtService {
     }
 
     public boolean isTokenValido(String token, UserDetails userDetails) {
-        String email = extrairEmail(token);
-        return email.equals(userDetails.getUsername()) && !isTokenExpirado(token);
+        try {
+            String email = extrairEmail(token);
+            return email.equals(userDetails.getUsername()) && !isTokenExpirado(token);
+        } catch (JwtException | IllegalArgumentException e) {
+            // token malformado, assinatura inválida, expirado, etc -> simplesmente inválido
+            return false;
+        }
     }
 
     private Claims extrairClaims(String token) {
@@ -50,5 +54,4 @@ public class JwtService {
     private boolean isTokenExpirado(String token) {
         return extrairClaims(token).getExpiration().before(new Date());
     }
-
 }
